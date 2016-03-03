@@ -1,6 +1,6 @@
 {
-  "name": "qparser",
-  "version": "0.1.0",
+  "name": "query-parser",
+  "version": "0.2.0",
   "description": "A parsing library intended to parse complex user input",
   "main": "src/parser.js",
   "repository": {
