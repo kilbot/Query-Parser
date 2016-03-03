@@ -66,7 +66,8 @@ parse('animal:bears');
 parse('bears 300-500');
 // Output:
 // [
-//   { type: "prefix", prefix: "animal", query: "bears" }
+//   { type: "string", query: "bears" },
+//   { type: "range", from: 300, to: 500 }
 // ]
 ```
 

@@ -42,38 +42,67 @@ describe('simple queries', function () {
       }]);
     });
 
-    //it('should parse range arguments', function () {
-    //  parse('15-25').should.eql([{
-    //    type: 'range',
-    //    from: '15',
-    //    to: '25'
-    //  }]);
-    //});
-    //
-    //it('should parse left range arguments', function () {
-    //  parse('15-').should.eql([{
-    //    type: 'range',
-    //    from: '15',
-    //    to: ''
-    //  }]);
-    //});
-    //
-    //it('should parse right range arguments', function () {
-    //  parse('-25').should.eql([{
-    //    type: 'range',
-    //    from: '',
-    //    to: '25'
-    //  }]);
-    //});
-    //
-    //it('should parse prefixed range arguments', function () {
-    //  parse('pref:15-25').should.eql([{
-    //    type: 'prange',
-    //    prefix: 'pref',
-    //    from: '15',
-    //    to: '25'
-    //  }]);
-    //});
+    it('should parse range arguments', function () {
+      parse('15-25').should.eql([{
+        type: 'range',
+        from: '15',
+        to: '25'
+      }]);
+    });
+
+    it('should parse left range arguments', function () {
+      parse('15-').should.eql([{
+        type: 'range',
+        from: '15',
+        to: ''
+      }]);
+    });
+
+    it('should parse right range arguments', function () {
+      parse('-25').should.eql([{
+        type: 'range',
+        from: '',
+        to: '25'
+      }]);
+    });
+
+    it('should parse prefixed range arguments', function () {
+      parse('pref:15-25').should.eql([{
+        type: 'prange',
+        prefix: 'pref',
+        from: '15',
+        to: '25'
+      }]);
+    });
+
+    it('should only apply range arguments for numbers', function () {
+      parse('hyphenated-string').should.eql([{
+        type: 'string',
+        query: 'hyphenated-string'
+      }]);
+    });
+
+    it('should only apply left range arguments for numbers', function () {
+      parse('hyphenated-').should.eql([{
+        type: 'string',
+        query: 'hyphenated-'
+      }]);
+    });
+
+    it('should only apply right range arguments for numbers', function () {
+      parse('-hyphenated').should.eql([{
+        type: 'string',
+        query: '-hyphenated'
+      }]);
+    });
+
+    it('should parse prefixed range arguments', function () {
+      parse('pref:hyphenated-string').should.eql([{
+        type: 'prefix',
+        prefix: 'pref',
+        query: 'hyphenated-string'
+      }]);
+    });
 
     it('should parse string arguments with flags', function () {
       parse('+*/!#~abcdef').should.eql([{

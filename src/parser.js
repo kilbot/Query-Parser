@@ -46,7 +46,7 @@ function matchRegex(character){
     'GROUP_CLOSE',
     'OR',
     'PREFIX',
-    //'RANGE',
+    'RANGE',
     'SPACES',
     'QUOTES',
     'FLAGS'
@@ -86,7 +86,13 @@ function appendPart(opts){
   if(!opts.hasarg){ return; }
 
   if (['range', 'prange'].indexOf(part.type) >= 0) {
-    part.to = opts.buffer;
+    if(opts.buffer && _.isNaN(parseFloat(opts.buffer))){
+      part = {};
+      part.type = 'string';
+      part.query = '-' + opts.buffer;
+    } else {
+      part.to = opts.buffer;
+    }
   } else if (opts.buffer && opts.buffer.length) {
     part.query = opts.buffer;
   }
@@ -193,6 +199,10 @@ var matches = {
   },
 
   range: function(opts){
+    if(opts.buffer && _.isNaN(parseFloat(opts.buffer))){
+      opts.buffer += opts.character;
+      return;
+    }
     if (opts.part.type && (opts.part.type === 'prefix')) {
       opts.part.type = 'prange';
     } else {

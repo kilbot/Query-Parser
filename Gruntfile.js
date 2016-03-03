@@ -6,11 +6,11 @@ module.exports = function(grunt) {
 
     watch: {
       js  : {
-        files: ['qparser.js'],
+        files: ['src/*.js'],
         tasks: ['jshint', 'simplemocha', 'webpack']
       },
       test: {
-        files: ['tests/spec.js'],
+        files: ['tests/*.js'],
         tasks: ['simplemocha']
       }
     },
@@ -37,7 +37,7 @@ module.exports = function(grunt) {
         reporter: require('jshint-stylish'),
         verbose : true
       },
-      files  : ['qparser.js']
+      files  : ['src/*.js']
     },
 
     webpack: {
