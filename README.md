@@ -4,6 +4,8 @@ QParser
 
 A parsing library intended to parse complex user input with logical operators, grouping, prefixes and flags.
 
+## [Demo](http://kilbot.github.io/Query-Parser/)
+
 Usage
 =====
 
