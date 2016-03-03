@@ -1,22 +1,17 @@
 module.exports = function(grunt) {
 
+  var webpack = require('webpack');
+
   grunt.initConfig({
 
     watch: {
       js  : {
         files: ['qparser.js'],
-        tasks: ['jshint', 'simplemocha']
+        tasks: ['jshint', 'simplemocha', 'webpack']
       },
       test: {
         files: ['tests/spec.js'],
         tasks: ['simplemocha']
-      }
-    },
-
-    uglify: {
-      build: {
-        src : 'qparser.js',
-        dest: 'qparser.min.js'
       }
     },
 
@@ -43,11 +38,28 @@ module.exports = function(grunt) {
         verbose : true
       },
       files  : ['qparser.js']
+    },
+
+    webpack: {
+      build: {
+        entry: './src/parser.js',
+        output: {
+          path: 'dist/',
+          filename: 'parser.min.js',
+          library: 'Parser'
+        },
+        externals: {
+          lodash: '_'
+        },
+        plugins: [
+          new webpack.optimize.UglifyJsPlugin()
+        ]
+      }
     }
 
   });
 
   require('load-grunt-tasks')(grunt);
-  grunt.registerTask('default', ['jshint', 'simplemocha']);
+  grunt.registerTask('default', ['jshint', 'simplemocha', 'webpack']);
   grunt.registerTask('dev', ['default', 'watch']);
 }

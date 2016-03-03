@@ -8,6 +8,9 @@ var _ = require('lodash');
  */
 function Parser(options){
   this.options = options || {};
+  if (!this.options.instance) {
+    return this.parse.bind(this);
+  }
 }
 
 /**
@@ -49,9 +52,11 @@ function matchRegex(character){
     'FLAGS'
   ], function(key){
     if(regex[key].test(character)){
-      match = key; return true;
+      match = key;
+      return true;
     } else {
-      match = undefined; return false;
+      match = undefined;
+      return false;
     }
   });
 
@@ -243,33 +248,24 @@ function next(opts){
   }
 }
 
-/**
- *
- */
-var methods = {
+Parser.prototype.parse = function(input, open) {
+  var opts = {
+    parts   : [],
+    part    : {},
+    open    : open,
+    buffer  : '',
+    hasarg  : false
+  };
 
-  parse: function(input, open) {
-    var opts = {
-      parts   : [],
-      part    : {},
-      open    : open,
-      buffer  : '',
-      hasarg  : false
-    };
-
-    if (!input || !input.length || (typeof input !== 'string')) {
-      return opts.parts;
-    }
-
-    this._input = input.split('');
-    next.call(this, opts);
-    appendPart.call(this, opts);
+  if (!input || !input.length || (typeof input !== 'string')) {
     return opts.parts;
   }
 
+  this._input = input.split('');
+  next.call(this, opts);
+  appendPart.call(this, opts);
+  return opts.parts;
 };
-
-_.extend(Parser.prototype, methods);
 
 module.exports = Parser;
 /* jshint +W071, +W074 */

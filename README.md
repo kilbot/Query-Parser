@@ -33,39 +33,39 @@ Simple cases of search input
 ### 1 Simple Strings
 ```javascript
 parse('bears monkeys');
-Output:
-[
-  { type: "string", query: "bears" },
-  { type: "string", query: "monkeys" }
-]
+// Output:
+// [
+//   { type: "string", query: "bears" },
+//   { type: "string", query: "monkeys" }
+// ]
 ```
 
 ### 2 Flags
 ```javascript
 parse('bears !monkeys');
-Output:
-[
-  { type: "string", query: "bears" },
-  { type: "string", query: "monkeys", flags: ["!"] }
-]
+// Output:
+// [
+//   { type: "string", query: "bears" },
+//   { type: "string", query: "monkeys", flags: ["!"] }
+// ]
 ```
 
 ### 3 Prefixes
 ```javascript
 parse('animal:bears');
-Output:
-[
-  { type: "prefix", prefix: "animal", query: "bears" }
-]
+// Output:
+// [
+//   { type: "prefix", prefix: "animal", query: "bears" }
+// ]
 ```
 
 ### 4 Range
 ```javascript
 parse('bears 300-500');
-Output:
-[
-  { type: "prefix", prefix: "animal", query: "bears" }
-]
+// Output:
+// [
+//   { type: "prefix", prefix: "animal", query: "bears" }
+// ]
 ```
 
 ### 5 Prefixed Range
@@ -73,11 +73,11 @@ Output:
 will produce
 ```javascript
 parse('bears price:20-30');
-Output:
-[
-  { type: "string", query: "bears" },
-  { type: "prange", prefix: "price", from: 20, to: 30 }
-]
+// Output:
+// [
+//   { type: "string", query: "bears" },
+//   { type: "prange", prefix: "price", from: 20, to: 30 }
+// ]
 ```
 
 All special symbols can be screened with backslash.
@@ -90,57 +90,57 @@ is ANDed. Example:
 
 ```javascript
 parse('(sex drugs)|rocknroll');
-Output:
-[
-  {
-    type: "or",
-    queries: [
-      {
-        type: "and",
-        queries: [
-          {
-            type: "string",
-            query: "sex"
-          },
-          {
-            type: "string",
-            query: "drugs"
-          }
-        ]
-      },
-      {
-        type: "string",
-        query: "rocknroll"
-      }
-    ]
-  }
-]
+// Output:
+// [
+//   {
+//     type: "or",
+//     queries: [
+//       {
+//         type: "and",
+//         queries: [
+//           {
+//             type: "string",
+//             query: "sex"
+//           },
+//           {
+//             type: "string",
+//             query: "drugs"
+//           }
+//         ]
+//       },
+//       {
+//         type: "string",
+//         query: "rocknroll"
+//       }
+//     ]
+//   }
+// ]
 ```
 
 Square brackets also group everything inside them, but the content is ORed. Example:
 
 ```javascript
 parse('[sex drugs] rocknroll');
-Output:
-[
-  {
-    type: "or",
-    queries: [
-      {
-        type: "string",
-        query: "sex"
-      },
-      {
-        type: "string",
-        query: "drugs"
-      }
-    ]
-  },
-  {
-    type: "string",
-    query: "rocknroll"
-  }
-]
+// Output:
+// [
+//   {
+//     type: "or",
+//     queries: [
+//       {
+//         type: "string",
+//         query: "sex"
+//       },
+//       {
+//         type: "string",
+//         query: "drugs"
+//       }
+//     ]
+//   },
+//   {
+//     type: "string",
+//     query: "rocknroll"
+//   }
+// ]
 ```
 
 More on flags, strings and spaces
@@ -153,15 +153,15 @@ Example:
 
 ```javascript
 parse('~\+#!*\/animal:bear');
-Output: 
-[
-  { 
-    type: "prefix", 
-    prefix: "animal", 
-    query: "bear", 
-    flags: ["~", "\", "", "+", "#", "!", "*\", "/"] 
-  }
-]
+// Output: 
+// [
+//   { 
+//     type: "prefix", 
+//     prefix: "animal", 
+//     query: "bear", 
+//     flags: ["~", "\", "", "+", "#", "!", "*\", "/"] 
+//   }
+// ]
 ```
 
 Flags in the array will appear in the same order as in the input string. Flags are not interpreted in any
@@ -171,23 +171,23 @@ Everywhere where a string can appear, a quoted string can be used. E.g.
 
 ```javascript
 parse('"bears monkeys"');
-Output:
-[
-  { 
-    type: "string", 
-    query: "bears monkeys"
-  }
-]
+// Output:
+// [
+//   { 
+//     type: "string", 
+//     query: "bears monkeys"
+//   }
+// ]
 
 parse('animal:"white bears"');
-Output:
-[
-  { 
-    type: "prefix", 
-    prefix: "animal", 
-    query: "white bears" 
-  }
-]
+// Output:
+// [
+//   { 
+//     type: "prefix", 
+//     prefix: "animal", 
+//     query: "white bears" 
+//   }
+// ]
 ```
 
 By default, the following symbols are recognized as quotes: ", ', `

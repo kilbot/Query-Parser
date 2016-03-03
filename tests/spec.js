@@ -1,27 +1,27 @@
-var QParser = require('../qparser');
-var qparser = new QParser();
+var Parser = require('../src/parser');
+var parse = new Parser();
 
 describe('simple queries', function () {
 
   describe('one argument', function () {
 
     it('should parse empty argument', function () {
-      qparser.parse('').should.eql([]);
+      parse('').should.eql([]);
     });
 
     it('should parse undefined argument', function () {
-      qparser.parse(undefined).should.eql([]);
+      parse(undefined).should.eql([]);
     });
 
     it('should parse string as simple string argument', function () {
-      qparser.parse('abcdef').should.eql([{
+      parse('abcdef').should.eql([{
         type: 'string',
         query: 'abcdef'
       }]);
     });
 
     it('should parse prefixed string as prefixed string argument', function () {
-      qparser.parse('abc:def').should.eql([{
+      parse('abc:def').should.eql([{
         type: 'prefix',
         prefix: 'abc',
         query: 'def'
@@ -29,21 +29,21 @@ describe('simple queries', function () {
     });
 
     it('should parse several quoted words as single argument', function () {
-      qparser.parse('"abc def qqq"').should.eql([{
+      parse('"abc def qqq"').should.eql([{
         type: 'string',
         query: 'abc def qqq'
       }]);
     });
 
     it('should correctly treat unclosed quote', function () {
-      qparser.parse('"abc def qqq').should.eql([{
+      parse('"abc def qqq').should.eql([{
         type: 'string',
         query: 'abc def qqq'
       }]);
     });
 
     //it('should parse range arguments', function () {
-    //  qparser.parse('15-25').should.eql([{
+    //  parse('15-25').should.eql([{
     //    type: 'range',
     //    from: '15',
     //    to: '25'
@@ -51,7 +51,7 @@ describe('simple queries', function () {
     //});
     //
     //it('should parse left range arguments', function () {
-    //  qparser.parse('15-').should.eql([{
+    //  parse('15-').should.eql([{
     //    type: 'range',
     //    from: '15',
     //    to: ''
@@ -59,7 +59,7 @@ describe('simple queries', function () {
     //});
     //
     //it('should parse right range arguments', function () {
-    //  qparser.parse('-25').should.eql([{
+    //  parse('-25').should.eql([{
     //    type: 'range',
     //    from: '',
     //    to: '25'
@@ -67,7 +67,7 @@ describe('simple queries', function () {
     //});
     //
     //it('should parse prefixed range arguments', function () {
-    //  qparser.parse('pref:15-25').should.eql([{
+    //  parse('pref:15-25').should.eql([{
     //    type: 'prange',
     //    prefix: 'pref',
     //    from: '15',
@@ -76,7 +76,7 @@ describe('simple queries', function () {
     //});
 
     it('should parse string arguments with flags', function () {
-      qparser.parse('+*/!#~abcdef').should.eql([{
+      parse('+*/!#~abcdef').should.eql([{
         flags: ['+', '*', '/', '!', '#', '~'],
         type: 'string',
         query: 'abcdef'
@@ -84,7 +84,7 @@ describe('simple queries', function () {
     });
 
     it('should parse several prefixed quoted words with flags', function () {
-      qparser.parse('+*/!#e:"abcdef qwerty"').should.eql([{
+      parse('+*/!#e:"abcdef qwerty"').should.eql([{
         flags: ['+', '*', '/', '!', '#'],
         type: 'prefix',
         prefix: 'e',
@@ -93,14 +93,14 @@ describe('simple queries', function () {
     });
 
     it('should screen special symbols with \\', function() {
-      qparser.parse('\\+abcdef').should.eql([{
+      parse('\\+abcdef').should.eql([{
         type: 'string',
         query: '+abcdef'
       }]);
     });
 
     it('should correctly process flags separated with spaces', function() {
-      qparser.parse('   +   abcdef   ').should.eql([{
+      parse('   +   abcdef   ').should.eql([{
         flags: ['+'],
         type: 'string',
         query: 'abcdef'
@@ -112,7 +112,7 @@ describe('simple queries', function () {
   describe('several arguments', function() {
 
     it('should parse two prefixed quoted arguments with flags', function() {
-      qparser.parse('+*/!#e:"abcdef qwerty" +#q:"foo bar"').should.eql([
+      parse('+*/!#e:"abcdef qwerty" +#q:"foo bar"').should.eql([
         {
           flags: ['+', '*', '/', '!', '#'],
           type: 'prefix',
@@ -137,7 +137,7 @@ describe('complex queries', function() {
   describe('logical operators', function() {
 
     it('should group arguments in braces with AND', function() {
-      qparser.parse('(abc def)').should.eql([
+      parse('(abc def)').should.eql([
         {
           type: "and",
           queries: [
@@ -155,7 +155,7 @@ describe('complex queries', function() {
     });
 
     it('should correctly process closing brace', function() {
-      qparser.parse('def) abc').should.eql([
+      parse('def) abc').should.eql([
         {
           type: "string",
           query: "def)"
@@ -168,7 +168,7 @@ describe('complex queries', function() {
     });
 
     it('should correctly process opening brace', function() {
-      qparser.parse('(def abc').should.eql([
+      parse('(def abc').should.eql([
         {
           type: "and",
           queries: [
@@ -186,7 +186,7 @@ describe('complex queries', function() {
     });
 
     it('should not group arguments in screened braces', function() {
-      qparser.parse('\\(abc def\\)').should.eql([
+      parse('\\(abc def\\)').should.eql([
         {
           type: "string",
           query: "(abc"
@@ -199,7 +199,7 @@ describe('complex queries', function() {
     });
 
     it('should OR arguments separated by |', function() {
-      qparser.parse('abc|def').should.eql([
+      parse('abc|def').should.eql([
         {
           type: "or",
           queries: [
@@ -217,7 +217,7 @@ describe('complex queries', function() {
     });
 
     it('should OR arguments in braces separated by |', function() {
-      qparser.parse('(abc def)|qwe').should.eql([
+      parse('(abc def)|qwe').should.eql([
         {
           type: "or",
           queries: [
@@ -244,7 +244,7 @@ describe('complex queries', function() {
     });
 
     it('should OR and AND complex arguments', function() {
-      qparser.parse('(!e:"abc def" #15)|(+q:"qwe rty" simple)').should.eql([
+      parse('(!e:"abc def" #15)|(+q:"qwe rty" simple)').should.eql([
         {
           type: "or",
           queries: [
@@ -285,7 +285,7 @@ describe('complex queries', function() {
     });
 
     it('should do two-level AND grouping', function() {
-      qparser.parse("(abc ('def q' +qwe))").should.eql([
+      parse("(abc ('def q' +qwe))").should.eql([
         {
           type: "and",
           queries: [
@@ -313,7 +313,7 @@ describe('complex queries', function() {
     });
 
     it('should do OR grouping in the middle', function() {
-      qparser.parse("abc def|qwe rty").should.eql([
+      parse("abc def|qwe rty").should.eql([
         {
           type: "string",
           query: "abc"
@@ -339,7 +339,7 @@ describe('complex queries', function() {
     });
 
     it('should OR simple terms in square braces', function() {
-      qparser.parse("abc [def qwe rty]").should.eql([
+      parse("abc [def qwe rty]").should.eql([
         {
           type: "string",
           query: "abc"
@@ -365,7 +365,7 @@ describe('complex queries', function() {
     });
 
     it('should OR complex terms in square braces', function() {
-      qparser.parse("[abc (+def e:10 p:qwe) rty]").should.eql([
+      parse("[abc (+def e:10 p:qwe) rty]").should.eql([
         {
           type: "or",
           queries: [
