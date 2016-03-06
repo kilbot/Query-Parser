@@ -38,7 +38,7 @@ var regex = {
 function matchRegex(character){
   var match;
 
-  _.any([
+  _.some([
     'SCREEN',
     'OR_OPEN',
     'OR_CLOSE',
